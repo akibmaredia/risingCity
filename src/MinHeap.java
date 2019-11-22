@@ -35,31 +35,59 @@ public class MinHeap {
         arr[i] = p;
 
         //Percolate up. Find any parent greater than current node and swap
-        while (i != 0 && getParent(i).key > arr[i].key ){
-            swap(i, getParentIndex(i));
-            i = getParentIndex(i);
+        while(i != 0 && arr[i].key <= getParent(i).key) {
+            if(arr[i].key < getParent(i).key || arr[i].rbNode.key < getParent(i).rbNode.key) {
+                swap(i, getParentIndex(i));
+                i = getParentIndex(i);
+            } else {
+                break;
+            }
         }
+
+        /*while (i != 0 && getParent(i).key >= arr[i].key) {
+            if(getParent(i).key > arr[i].key || getParent(i).rbNode.key > arr[i].rbNode.key) {
+                swap(i, getParentIndex(i));
+                i = getParentIndex(i);
+            } else {
+                break;
+            }
+        }*/
     }
 
     /**
      * Find any node greater than one of its child and swap
      * @param i index
      */
-    private void heapify(int i){
+    private void heapify(int i) {
         int l = i*2 + 1;//left index
         int r = i*2 + 2;//right index
+
         //replace ith with smallest among left child and right child
         int smallest = i;
-        if (l < size && arr[l].key < arr[i].key){
+        if(l < size && arr[i].key >= arr[l].key && (arr[i].key > arr[l].key || arr[i].rbNode.key > arr[l].rbNode.key)) {
             smallest = l;
         }
-        if (r < size && arr[r].key < arr[smallest].key){
+        if(r < size && arr[smallest].key >= arr[r].key && (arr[smallest].key > arr[r].key || arr[smallest].rbNode.key > arr[r].rbNode.key)) {
             smallest = r;
         }
-        if (smallest != i){
-            swap(i,smallest);
-            heapify(smallest);//recur if a swap occurs
+
+        if (smallest != i && arr[i].key >= arr[smallest].key &&
+                (arr[i].key > arr[smallest].key || arr[i].rbNode.key > arr[smallest].rbNode.key)) {
+            swap(i, smallest);
+            heapify(smallest);
         }
+
+//        if (l < size && arr[i].key >= arr[i].key && (arr[i].key > arr[l].key || arr[i].rbNode.key > arr[])) {
+//            smallest = l;
+//        }
+//        if (r < size && arr[r].key <= arr[smallest].key && arr[r].rbNode.key < arr[smallest].rbNode.key){
+//            smallest = r;
+//        }
+//        if (smallest != i){
+//            swap(i,smallest);
+//            heapify(smallest);//recur if a swap occurs
+//        }
+
     }
 
     /**

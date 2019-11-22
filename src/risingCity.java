@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
  * @author Akib
  */
 public class risingCity {
-
     private static String INPUT_FILE;
     private static final String OUT_FILE = "output_file.txt";
     private Rbt tree = new Rbt();
@@ -18,7 +17,7 @@ public class risingCity {
     private FileWriter fileWriter;
     private HeapNode currentBuilding =null;//Current building being executed
     private int t = 0;//Global time counter
-    private int currentSlotEndTime =0;//Time at which the 5s slot will end
+    private int currentSlotEndTime = 0;//Time at which the 5s slot will end
     private int currentBuildingCompletionTime = 0;//Time at which the current building being executed will end if continued indefinitely
     private boolean debug = false;//set true for console outputs
 
@@ -46,7 +45,6 @@ public class risingCity {
         FileReader fr = null;
 
         try {
-
             URL path = ClassLoader.getSystemResource(INPUT_FILE);
             fr = new FileReader(new File(path.toURI()));
             br = new BufferedReader(fr);
@@ -81,6 +79,7 @@ public class risingCity {
                             insertBuilding(params);
                             break;
                         }
+                        case "Print":
                         case "PrintBuilding": {
                             printBuilding(params);
                             break;
@@ -137,12 +136,11 @@ public class risingCity {
         if (currentBuilding == null) {
             if (heap.isEmpty()) {
                 if (debug) System.out.println("No building to dispatch!");
-                return;
             }
             else {
                 currentBuilding = heap.extractMin();
                 currentSlotEndTime = t+5;
-                currentBuildingCompletionTime = t + currentBuilding.rbNode.totalTime - currentBuilding.key - 1;
+                currentBuildingCompletionTime = t + currentBuilding.rbNode.totalTime - currentBuilding.key;
                 if (debug) System.out.println("Dispatched Building:"+ currentBuilding.rbNode.key+" at time:"+t);
             }
         }
@@ -151,6 +149,7 @@ public class risingCity {
                 if (t == currentBuildingCompletionTime){
                     //Building completed, so remove from tree and reset current building fields
                     if (debug) System.out.println("Building Completed:"+ currentBuilding.rbNode.key+" at time"+t);
+                    printBuildingInFormat(tree.search(currentBuilding.rbNode.key), t);
                     tree.delete(currentBuilding.rbNode.key);
                     currentBuilding = null;
                     currentSlotEndTime = 0;
@@ -181,7 +180,6 @@ public class risingCity {
      * @throws IOException
      */
     private void printBuilding(String[] params) throws IOException {
-
         if (params.length == 1){
             int buildingNum = Integer.parseInt(params[0]);
             RbNode rbNode = tree.search(buildingNum);
@@ -225,8 +223,7 @@ public class risingCity {
     private void printBuildingInFormat(RbNode node) throws IOException {
         if (node.key == currentBuilding.rbNode.key) {
             fileWriter.write("("+ node.key+"," + currentBuilding.key+"," + node.totalTime + ")\n");
-        }
-        else {
+        } else {
             fileWriter.write("(" + node.key + "," + node.heapNode.key + "," + node.totalTime + ")\n");
         }
     }
@@ -250,4 +247,7 @@ public class risingCity {
         heap.insert(heapNode);
     }
 
+    private void printBuildingInFormat(RbNode node, int finishDay) throws IOException {
+        fileWriter.write("("+ node.key+"," + finishDay+")\n");
+    }
 }

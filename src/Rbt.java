@@ -367,34 +367,34 @@ public class Rbt {
     private void deleteFix(RbNode py){
 
         //loop until py is root or py is red
-        while(py!=root && py.color == COLOR.BLACK){
+        while(py!=root && py.color == COLOR.BLACK) {
             //If py is left child of ppy
-            if(py == py.parent.left){
+            if(py == py.parent.left) {
                 //v holds the ppy's right child
                 RbNode v = py.parent.right;
 
                 //if v is red, left rotation is required
-                if(v.color == COLOR.RED){
+                if(v.color == COLOR.RED) {
                     v.color = COLOR.BLACK;
                     py.parent.color = COLOR.RED;
                     leftRotate(py.parent);
                     v = py.parent.right;
                 }
                 //if v's both children are black, recolor
-                if(v.left.color == COLOR.BLACK && v.right.color == COLOR.BLACK){
+                if(v.left.color == COLOR.BLACK && v.right.color == COLOR.BLACK) {
                     v.color = COLOR.RED;
                     py = py.parent;
                     continue;
                 }
                 //if only right child is black, recolor and right rotate
-                else if(v.right.color == COLOR.BLACK){
+                else if(v.right.color == COLOR.BLACK) {
                     v.left.color = COLOR.BLACK;
                     v.color = COLOR.RED;
                     rightRotate(v);
                     v = py.parent.right;
                 }
                 //if v's right child is red, recolor and left rotate
-                if(v.right.color == COLOR.RED){
+                if(v.right.color == COLOR.RED) {
                     v.color = py.parent.color;
                     py.parent.color = COLOR.BLACK;
                     v.right.color = COLOR.BLACK;
@@ -408,7 +408,7 @@ public class Rbt {
                 RbNode v = py.parent.left;
 
                 //if v is red, recolor and right rotate
-                if(v.color == COLOR.RED){
+                if(v.color == COLOR.RED) {
                     v.color = COLOR.BLACK;
                     py.parent.color = COLOR.RED;
                     rightRotate(py.parent);
@@ -416,20 +416,20 @@ public class Rbt {
                 }
 
                 //if v's children are both black, change v's color
-                if(v.right.color == COLOR.BLACK && v.left.color == COLOR.BLACK){
+                if(v.right.color == COLOR.BLACK && v.left.color == COLOR.BLACK) {
                     v.color = COLOR.RED;
                     py = py.parent;
                     continue;
                 }
                 //if only v's left child is black, recolor and left rotate
-                else if(v.left.color == COLOR.BLACK){
+                else if(v.left.color == COLOR.BLACK) {
                     v.right.color = COLOR.BLACK;
                     v.color = COLOR.RED;
                     leftRotate(v);
                     v = py.parent.left;
                 }
                 //if v's left child is red, recolor and right rotate
-                if(v.left.color == COLOR.RED){
+                if(v.left.color == COLOR.RED) {
                     v.color = py.parent.color;
                     py.parent.color = COLOR.BLACK;
                     v.left.color = COLOR.BLACK;
