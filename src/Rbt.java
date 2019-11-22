@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**bs
- * RedBlack Tree implementation for scheduler
+ * RedBlack Tree implementation for rising
  * Uses sentinel nil values instead of null
  */
 public class Rbt {

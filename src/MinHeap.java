@@ -1,5 +1,5 @@
 /**
- * MinHeap Implementation for scheduler
+ * MinHeap Implementation for rising
  * @author Akib
  */
 public class MinHeap {
@@ -11,12 +11,12 @@ public class MinHeap {
      * Insert into heap, double if array full
      * @param key: Executed Time of
      */
-    public void insert(int key){
+    public void insert(int key) {
         HeapNode p = new HeapNode(key);
         insertUtil(p);
     }
 
-    public void insert(HeapNode p){
+    public void insert(HeapNode p) {
         insertUtil(p);
     }
 
@@ -43,15 +43,6 @@ public class MinHeap {
                 break;
             }
         }
-
-        /*while (i != 0 && getParent(i).key >= arr[i].key) {
-            if(getParent(i).key > arr[i].key || getParent(i).rbNode.key > arr[i].rbNode.key) {
-                swap(i, getParentIndex(i));
-                i = getParentIndex(i);
-            } else {
-                break;
-            }
-        }*/
     }
 
     /**
@@ -76,18 +67,6 @@ public class MinHeap {
             swap(i, smallest);
             heapify(smallest);
         }
-
-//        if (l < size && arr[i].key >= arr[i].key && (arr[i].key > arr[l].key || arr[i].rbNode.key > arr[])) {
-//            smallest = l;
-//        }
-//        if (r < size && arr[r].key <= arr[smallest].key && arr[r].rbNode.key < arr[smallest].rbNode.key){
-//            smallest = r;
-//        }
-//        if (smallest != i){
-//            swap(i,smallest);
-//            heapify(smallest);//recur if a swap occurs
-//        }
-
     }
 
     /**
@@ -95,8 +74,8 @@ public class MinHeap {
      * Put last element to root(first position) and heapify
      * @return Min
      */
-    public HeapNode extractMin(){
-        if (size == 1){
+    public HeapNode extractMin() {
+        if (size == 1) {
             HeapNode min = arr[0];
             size--;
             arr[0] = null;
