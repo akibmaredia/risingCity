@@ -3,10 +3,9 @@
  */
 public class RbNode {
 
-    public static final RbNode nil = new RbNode(-999, Rbt.COLOR.BLACK);//sentinel
+    public static final RbNode nil = new RbNode(new BuildingNode(-999,0,0), Rbt.COLOR.BLACK);//sentinel
 
-    public int key; //Unique buildingNum
-    public int totalTime;//Total time for building
+    public BuildingNode key; //Unique buildingNum
     public RbNode left = nil;
     public RbNode right = nil;
     public RbNode parent = nil;
@@ -14,22 +13,17 @@ public class RbNode {
     public HeapNode heapNode;//Object reference to heapNode in MinHeap
 
     //Constructors:
-    public RbNode(int key, HeapNode heapNode){
+    public RbNode(BuildingNode key, HeapNode heapNode) {
         this.key = key;
         this.heapNode = heapNode;
     }
 
-    public RbNode(int key){
+    public RbNode(BuildingNode key) {
         this.key = key;
     }
 
-    public RbNode(int key, Rbt.COLOR color){
+    public RbNode(BuildingNode key, Rbt.COLOR color) {
         this.key = key;
         this.color = color;
-    }
-
-    @Override
-    public String toString() {
-        return "Key:"+this.key+",Color:"+this.color.name();
     }
 }

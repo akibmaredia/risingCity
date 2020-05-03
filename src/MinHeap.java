@@ -1,29 +1,20 @@
 /**
- * MinHeap Implementation for rising
- * @author Akib
+ * MinHeap Implementation for risingCity
  */
 public class MinHeap {
 
-    public int size = 0;//Holds current size of MinHeap
+    public int size = 0;//Holds size of MinHeap
     public HeapNode[] arr;//Array of Nodes
 
-    /**
-     * Insert into heap, double if array full
-     * @param key: Executed Time of
-     */
-    public void insert(int key) {
-        HeapNode p = new HeapNode(key);
-        insertUtil(p);
-    }
 
     public void insert(HeapNode p) {
         insertUtil(p);
     }
 
     /**
-     * Insert Node p into heap
-     * if array full, double it
-     * Update size variable
+     * Insert node into heap
+     * if array is full, double the array
+     * update size
      * @param p
      */
     private void insertUtil(HeapNode p) {
@@ -34,43 +25,44 @@ public class MinHeap {
         size++;
         arr[i] = p;
 
-        //Percolate up. Find any parent greater than current node and swap
-        while(i != 0 && arr[i].key <= getParent(i).key) {
-            if(arr[i].key < getParent(i).key || arr[i].rbNode.key < getParent(i).rbNode.key) {
+        //Find any parent greater than current node and swap
+        while(i != 0 && arr[i].key.getExecutedTime() <= getParent(i).key.getExecutedTime()) {
+            if(arr[i].key.getExecutedTime() < getParent(i).key.getExecutedTime() || arr[i].rbNode.key.getBuildingNum() < getParent(i).rbNode.key.getBuildingNum()) {
                 swap(i, getParentIndex(i));
                 i = getParentIndex(i);
-            } else {
+            }
+            else {
                 break;
             }
         }
     }
 
     /**
-     * Find any node greater than one of its child and swap
+     * find invalid order and swap
      * @param i index
      */
     private void heapify(int i) {
         int l = i*2 + 1;//left index
         int r = i*2 + 2;//right index
 
-        //replace ith with smallest among left child and right child
-        int smallest = i;
-        if(l < size && arr[i].key >= arr[l].key && (arr[i].key > arr[l].key || arr[i].rbNode.key > arr[l].rbNode.key)) {
-            smallest = l;
+        //replace ith with smaller among left child and right child
+        int smaller = i;
+        if(l < size && arr[i].key.getExecutedTime() >= arr[l].key.getExecutedTime() && (arr[i].key.getExecutedTime() > arr[l].key.getExecutedTime() || arr[i].rbNode.key.getBuildingNum() > arr[l].rbNode.key.getBuildingNum())) {
+            smaller = l;
         }
-        if(r < size && arr[smallest].key >= arr[r].key && (arr[smallest].key > arr[r].key || arr[smallest].rbNode.key > arr[r].rbNode.key)) {
-            smallest = r;
+        if(r < size && arr[smaller].key.getExecutedTime() >= arr[r].key.getExecutedTime() && (arr[smaller].key.getExecutedTime() > arr[r].key.getExecutedTime() || arr[smaller].rbNode.key.getBuildingNum() > arr[r].rbNode.key.getBuildingNum())) {
+            smaller = r;
         }
 
-        if (smallest != i && arr[i].key >= arr[smallest].key &&
-                (arr[i].key > arr[smallest].key || arr[i].rbNode.key > arr[smallest].rbNode.key)) {
-            swap(i, smallest);
-            heapify(smallest);
+        if (smaller != i && arr[i].key.getExecutedTime() >= arr[smaller].key.getExecutedTime() &&
+                (arr[i].key.getExecutedTime() > arr[smaller].key.getExecutedTime() || arr[i].rbNode.key.getBuildingNum() > arr[smaller].rbNode.key.getBuildingNum())) {
+            swap(i, smaller);
+            heapify(smaller);
         }
     }
 
     /**
-     * Returns first element of array, which is always minimum of all
+     * remove and return the min in the heap which is the root node
      * Put last element to root(first position) and heapify
      * @return Min
      */
@@ -97,11 +89,11 @@ public class MinHeap {
         arr[j] = temp;
     }
 
-    private HeapNode getParent(int i){
+    private HeapNode getParent(int i) {
         return arr[getParentIndex(i)];
     }
 
-    private int getParentIndex(int i){
+    private int getParentIndex(int i) {
         return (i - 1) / 2;
     }
 
@@ -114,22 +106,12 @@ public class MinHeap {
         arr = temp;
     }
 
-    public MinHeap(){
+    public MinHeap() {
         arr = new HeapNode[1];
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0;
     }
 
-    //Used for testing purposes only
-//    public static void main(String[] args) {
-//        /*MinHeap heap = new MinHeap();
-//        heap.insert(0);
-//        heap.insert(5);
-//        heap.insert(0);
-//        heap.insert(5);
-//        heap.extractMin();
-//        print(heap);*/
-//    }
 }

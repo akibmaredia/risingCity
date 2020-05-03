@@ -22,7 +22,7 @@ public class Rbt {
         root.right = nil;
     }
 
-    public RbNode search(int key){
+    public RbNode search(int key) {
         return search(root, key);
     }
 
@@ -31,10 +31,10 @@ public class Rbt {
         if (root == nil) {
             return null;
         }
-        if (root.key == key) {
+        if (root.key.getBuildingNum() == key) {
             return root;
         }
-        else if (key < root.key) {
+        else if (key < root.key.getBuildingNum()) {
             return search(root.left, key);
         }
         else {
@@ -42,40 +42,7 @@ public class Rbt {
         }
     }
 
-    //Returns node with greatest key but less than parameter key
-    public RbNode greatestLessThanKey(int key) {
-        RbNode n = null;
-        RbNode node = root;
-        //Start from root, find appropriate node keeping track of last node reached in n
-        while (node != nil)
-            if (node.key >= key)
-                node = node.left;
-            else {
-                n = node;
-                node = node.right;
-            }
-
-        return n;
-    }
-
-
-    //Returns node with smallest key but greater than parameter key
-    public RbNode smallestGreaterThanK(int key) {
-        RbNode n = null;
-        RbNode node = root;
-        //Start from root, find appropriate node keeping track of last node reached in n
-        while (node != nil)
-            if (node.key <= key)
-                node = node.right;
-            else {
-                n = node;
-                node = node.left;
-            }
-
-        return n;
-    }
-
-    //Returns Nodes between keys key2 > key1
+    //Returns Nodes between key2 > key > key1
     public List<RbNode> searchInRange(int key1, int key2) {
         List<RbNode> list = new LinkedList<RbNode>();
         searchInRange(root, list, key1, key2);
@@ -87,15 +54,15 @@ public class Rbt {
         if (root == nil) {
             return;
         }
-        if (key1 < root.key) {
+        if (key1 < root.key.getBuildingNum()) {
             searchInRange(root.left, list, key1, key2);
         }
 
-        if (key1 <= root.key && key2 >= root.key) {
+        if (key1 <= root.key.getBuildingNum() && key2 >= root.key.getBuildingNum()) {
             list.add(root);
         }
 
-        if (key2 > root.key) {
+        if (key2 > root.key.getBuildingNum()) {
             searchInRange(root.right, list, key1, key2);
         }
     }
@@ -164,12 +131,6 @@ public class Rbt {
         return br;
     }
 
-    public void insert(int key) {
-        RbNode p = new RbNode(key);
-        insertNode(p);
-    }
-
-
     /**
      * Inserts node into RedBlack Tree
      * @param p
@@ -188,13 +149,13 @@ public class Rbt {
     }
 
     /**
-     * Insert logic similar to BST insertion
+     * BST insertion
      * Updates parent and child references
      * @param root
      * @param p
      */
     private void insertUtil(RbNode root, RbNode p) {
-        if (p.key < root.key) {
+        if (p.key.getBuildingNum() < root.key.getBuildingNum()) {
             if (root.left == nil) {
                 //Insert here and return
                 root.left = p;
@@ -218,7 +179,8 @@ public class Rbt {
 
     /***
      * Fix violations after insertion
-     * @param p Newly inserted RBNode
+     * @param p
+     * Newly inserted RBNode
      */
     private void insertFix(RbNode p) {
         //Color of p is null at this point
@@ -263,7 +225,7 @@ public class Rbt {
                 RbNode u = gp.left;
                 //Case when sibling of parent is red
                 if (u != nil && u.color == COLOR.RED) {
-                    //Recolor
+                    //Color Flip
                     gp.color = COLOR.RED;
                     pp.color = COLOR.BLACK;
                     u.color = COLOR.BLACK;
@@ -288,7 +250,7 @@ public class Rbt {
     }
 
     /**
-     * Move b in place of a which is a level above
+     * Move b in the place of a which is a level above
      * @param a Higher level
      * @param b Lower level
      */
@@ -305,12 +267,8 @@ public class Rbt {
         b.parent = a.parent;
     }
 
-//    public boolean delete(RbNode p){
-//        return delete(p.key);
-//    }
-
     /**
-     * Delete logic similar to BST delete if color is red. Otherwise fix violations
+     * BST delete if color is red. Otherwise fix violations
      * @param key
      * @return
      */
@@ -327,22 +285,26 @@ public class Rbt {
         if (y.left == nil) {
             v = y.right;
             levelUp(y, y.right);//swap with right child
-            //If right child is nil
+
         }
+
+        //If right child is nil
         else if (y.right == nil) {
             v = y.left;
             levelUp(y, y.left);//swap with left child
-            //If both children are not nil
+
         }
+
+        //If both children are not nil
         else {
-            temp = getMin(y.right);//temp holds left most node of right child of y
+            temp = getMin(y.right);//temp holds leftmost node of right child of y
             origColor = temp.color;
             v = temp.right;
-            //temp is root of y.right subtree
+            //temp is root of subtree in the right of y
             if (temp.parent == y) {
                 v.parent = temp;
             }
-            //level up temp.right
+            //level up right of temp
             else {
                 levelUp(temp, temp.right);
                 temp.right = y.right;
@@ -353,7 +315,7 @@ public class Rbt {
             temp.left.parent = temp;
             temp.color = y.color;
         }
-        //If color was red, violation fixes are not required
+        //If color is black call deleteFix
         if (origColor == COLOR.BLACK) {
             deleteFix(v);
         }
@@ -460,19 +422,4 @@ public class Rbt {
         gp.color = temp;
     }
 
-    //Use for testing
-   // public static void main(String[] args) {
-        /*RedBlackTree rb = new RedBlackTree();
-        rb.insert(1);
-        rb.insert(2);
-        rb.insert(3);
-        rb.insert(4);
-        rb.insert(5);
-        rb.insert(7);
-        rb.insert(8);
-        rb.insert(9);
-        rb.insert(10);
-        BTreePrinter.printNode(rb);
-        System.out.println(rb.smallestGreaterThanK(9));*/
-    //}
 }

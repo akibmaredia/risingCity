@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 /**
  * Main executing class for buildings.
  * Uses Red-Black tree and Min-Heap
- * @author Akib
  */
 public class risingCity {
     private static String INPUT_FILE;
@@ -15,7 +14,7 @@ public class risingCity {
     private Rbt tree = new Rbt();
     private MinHeap heap = new MinHeap();
     private FileWriter fileWriter;
-    private HeapNode currentBuilding =null;//Current building being executed
+    private HeapNode currentBuilding = null;//Current building being executed
     private int t = 0;//Global time counter
     private int currentSlotEndTime = 0;//Time at which the 5s slot will end
     private int currentBuildingCompletionTime = 0;//Time at which the current building being executed will end if continued indefinitely
@@ -33,12 +32,9 @@ public class risingCity {
 
     /**
      * Main risingCity logic is written in this method.
-     * -Read commands for each line and calls the corresponding method
-     * -Each command is processed only when the Global time is equal to
-     * the command execution time
-     * -In a unit of time, command will be processed and current building
-     * will be updated, if needed.
-     *
+     * Reads commands at each line and calls the corresponding method
+     * Every command is executed only when global time = execution time
+     * For a given time, a command is executed and the building is updated
      */
     private void begin() {
         BufferedReader br = null;
@@ -58,7 +54,6 @@ public class risingCity {
                 if (debug) System.out.println("Time:" + t);
                 if (debug) System.out.println(sCurrentLine);
 
-                //Sample Input: "13: PrintBuilding(10,300)"
                 Pattern p = Pattern.compile("(^\\d+): ([a-zA-Z]+)\\((.+)\\)");
                 Matcher m = p.matcher(sCurrentLine);
 
@@ -66,7 +61,7 @@ public class risingCity {
                     params = m.group(3).split(",");
                     int cmdExecTime = Integer.parseInt(m.group(1));//Time at which next command will be executed
 
-                    while (cmdExecTime != t){//If not global time, update current building and timings
+                    while (cmdExecTime != t) {//If not global time, update current building and timings
                         dispatchOrUpdateBuilding();
                         incrementTime();
                         if (debug) System.out.println("Time:" + t);
@@ -89,7 +84,7 @@ public class risingCity {
                 dispatchOrUpdateBuilding();
                 incrementTime();
             }
-            executeRemainingBuildings();//Case when all lines have been read but buildings are still waiting to be executed
+            executeRemainingBuildings();//All lines are read and buildings are to be executed
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,7 +103,7 @@ public class risingCity {
      * @throws IOException
      */
     private void executeRemainingBuildings() throws IOException {
-        while (currentBuilding != null){
+        while (currentBuilding != null) {
             if (debug) System.out.println("Time:" + t);
             dispatchOrUpdateBuilding();
             incrementTime();
@@ -121,12 +116,12 @@ public class risingCity {
     private void incrementTime() {
         t++;
         if (currentBuilding != null) {
-            currentBuilding.key = currentBuilding.key + 1;
+            currentBuilding.key.setExecutedTime(currentBuilding.key.getExecutedTime() + 1);
         }
     }
 
     /**
-     * In heap, the keys are executed times of all buildings. So, extract min will
+     * In heap, the nodes are sorted using executedTime. So, extract min will
      * output the building that will be of least executed time. This building will run
      * upto 5 days or upto it's total execution time if it lies in current slot.
      * Otherwise, we will re-insert the building in heap at the end of current slot.
@@ -140,17 +135,17 @@ public class risingCity {
             else {
                 currentBuilding = heap.extractMin();
                 currentSlotEndTime = t+5;
-                currentBuildingCompletionTime = t + currentBuilding.rbNode.totalTime - currentBuilding.key;
-                if (debug) System.out.println("Dispatched Building:"+ currentBuilding.rbNode.key+" at time:"+t);
+                currentBuildingCompletionTime = t + currentBuilding.rbNode.key.getTotalTime() - currentBuilding.key.getExecutedTime();
+                if (debug) System.out.println("Dispatched Building:"+ currentBuilding.rbNode.key.getBuildingNum()+" at time:"+t);
             }
         }
         else {
-            if (currentBuildingCompletionTime <= currentSlotEndTime){
+            if (currentBuildingCompletionTime <= currentSlotEndTime) {
                 if (t == currentBuildingCompletionTime){
                     //Building completed, so remove from tree and reset current building fields
-                    if (debug) System.out.println("Building Completed:"+ currentBuilding.rbNode.key+" at time"+t);
-                    printBuildingInFormat(tree.search(currentBuilding.rbNode.key), t);
-                    tree.delete(currentBuilding.rbNode.key);
+                    if (debug) System.out.println("Building Completed:"+ currentBuilding.rbNode.key.getBuildingNum()+" at time"+t);
+                    printBuildingInFormat(tree.search(currentBuilding.rbNode.key.getBuildingNum()), t);
+                    tree.delete(currentBuilding.rbNode.key.getBuildingNum());
                     currentBuilding = null;
                     currentSlotEndTime = 0;
                     currentBuildingCompletionTime = 0;
@@ -159,7 +154,7 @@ public class risingCity {
             }
             else {
                 //Slot ends
-                if (t == currentSlotEndTime){
+                if (t == currentSlotEndTime) {
                     //re-insert building in heap and reset current building fields
                     heap.insert(currentBuilding);
                     currentBuilding = null;
@@ -180,7 +175,7 @@ public class risingCity {
      * @throws IOException
      */
     private void printBuilding(String[] params) throws IOException {
-        if (params.length == 1){
+        if (params.length == 1) {
             int buildingNum = Integer.parseInt(params[0]);
             RbNode rbNode = tree.search(buildingNum);
             if (rbNode == null) {
@@ -198,7 +193,7 @@ public class risingCity {
             if (!list.isEmpty()){
                 StringBuilder sb = new StringBuilder();
                 for (RbNode node: list){
-                    sb.append("("+node.key+","+node.heapNode.key+","+node.totalTime + "),");
+                    sb.append("("+node.key.getBuildingNum()+","+node.heapNode.key.getExecutedTime()+","+node.key.getTotalTime() + "),");
                 }
                 sb.deleteCharAt(sb.length()-1);//remove last comma
                 sb.append("\n");
@@ -222,9 +217,9 @@ public class risingCity {
      */
     private void printBuildingInFormat(RbNode node) throws IOException {
         if (node.key == currentBuilding.rbNode.key) {
-            fileWriter.write("("+ node.key+"," + currentBuilding.key+"," + node.totalTime + ")\n");
+            fileWriter.write("("+ node.key.getBuildingNum()+"," + currentBuilding.key.getExecutedTime()+"," + node.key.getTotalTime() + ")\n");
         } else {
-            fileWriter.write("(" + node.key + "," + node.heapNode.key + "," + node.totalTime + ")\n");
+            fileWriter.write("(" + node.key.getBuildingNum() + "," + node.heapNode.key.getExecutedTime() + "," + node.key.getTotalTime() + ")\n");
         }
     }
 
@@ -238,9 +233,9 @@ public class risingCity {
         int num = Integer.parseInt(params[0]);
         int tTime = Integer.parseInt(params[1]);
         if (debug) System.out.println("Inserting buildingNum:"+num+", total time:"+tTime);
-        RbNode rbNode = new RbNode(num);
-        rbNode.totalTime = tTime;
-        HeapNode heapNode = new HeapNode(0);
+        RbNode rbNode = new RbNode(new BuildingNode(num, 0, tTime));
+//        rbNode.key.setTotalTime() = tTime;
+        HeapNode heapNode = new HeapNode(new BuildingNode(num, 0,tTime));
         rbNode.heapNode = heapNode;
         heapNode.rbNode = rbNode;
         tree.insertNode(rbNode);
@@ -248,6 +243,6 @@ public class risingCity {
     }
 
     private void printBuildingInFormat(RbNode node, int finishDay) throws IOException {
-        fileWriter.write("("+ node.key+"," + finishDay+")\n");
+        fileWriter.write("("+ node.key.getBuildingNum()+"," + finishDay+")\n");
     }
 }
