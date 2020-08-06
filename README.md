@@ -39,10 +39,6 @@
 
    You are required to maintain a global timer which starts at 0 and increments as the day passes. You cannot insert a building for construction to the data structures unless your global timer equals to the arrival time of the construction. All the time data are given in days.
 
-   ### Programming Environment
-   I have used Java for this project. My submission will include a makefile that creates an
-   executable file named risingCity
-
    ## Input and output requirements
 
    Example input:
@@ -69,11 +65,11 @@
       ```
       $ git clone https://github.com/akibmaredia/risingCity.git 
       ```
-   * To enter the `src` folder
+   * To enter the **src** folder
       ```
       $ cd risingCity/src
       ```
-   * To compile the the source
+   * This command will create an executable file called **risingCity**
       ```
       $ make
       ```
