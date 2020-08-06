@@ -12,10 +12,10 @@
 
    The needed operations are:
 
-   1. Print (buildingNum) prints the triplet buildingNum, executed_time, total_time.
-   2. Print (buildingNum1, buildingNum2) prints all triplets buildingNum, executed_time,
+   1. `Print (buildingNum)` prints the triplet buildingNum, executed_time, total_time.
+   2. `Print (buildingNum1, buildingNum2)` prints all triplets buildingNum, executed_time,
       total_time for which; <br /> buildingNum1 <= buildingNum <= buildingNum2.
-   3. Insert (buildingNum, total_time) where buildingNum is different from existing building
+   3. `Insert (buildingNum, total_time)` where buildingNum is different from existing building
       numbers and executed_time = 0.
 
 
