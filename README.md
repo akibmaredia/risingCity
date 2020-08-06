@@ -81,7 +81,7 @@
       ```
       $ risingCity input_file.txt
       ```
-      Provide any input in this file which matches the input format.
+      Provide any input in this file which matches the [input format](https://github.com/akibmaredia/risingCity#input-and-output-requirements)
    * You can find your output in `output_file.txt`
    * Run this command to clear all the binaries
       ```
